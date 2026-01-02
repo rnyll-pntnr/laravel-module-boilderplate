@@ -14,7 +14,7 @@ Route::group(['middleware' => 'guest'], function () {
 
     // User Registration
     Route::prefix('user')->group(function () {
-        Route::post('/store', [UserController::class, 'store'])->name('users.store');
+        Route::post('/store', [UserController::class, 'store'])->name('api.users.store');
     });
 });
 

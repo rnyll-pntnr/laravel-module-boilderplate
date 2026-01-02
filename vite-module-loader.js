@@ -37,6 +37,7 @@ async function collectModuleAssetsPaths(paths, modulesPath) {
             paths.push(...moduleConfig.paths);
           }
         } catch (error) {
+          console.error(`Error reading module configuration for ${moduleDir}: ${error}`);
           // vite.config.js does not exist, skip this module
         }
       }

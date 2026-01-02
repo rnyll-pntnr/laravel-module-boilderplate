@@ -10,7 +10,7 @@ import { type BreadcrumbItem, type User } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps<{
-    user: User
+    user: User;
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,7 +25,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Edit User',
         href: '#',
-    }
+    },
 ];
 
 const form = useForm({
@@ -38,10 +38,9 @@ const handleSubmit = (user: User) => {
     form.patch(update(user.id).url, {
         onSuccess: () => {
             form.reset();
-        }
+        },
     });
 };
-
 </script>
 
 <template>
@@ -53,20 +52,37 @@ const handleSubmit = (user: User) => {
                 <form @submit.prevent="handleSubmit(user)">
                     <div class="space-y-4">
                         <Label for="name">Name</Label>
-                        <Input id="name" v-model="form.name" type="text" :value="form.name"/>
+                        <Input
+                            id="name"
+                            v-model="form.name"
+                            type="text"
+                            :value="form.name"
+                        />
                         <InputError :message="form.errors.name" />
                     </div>
                     <div class="space-y-4">
                         <Label for="email">Email</Label>
-                        <Input id="email" v-model="form.email" type="email" :value="form.email" />
+                        <Input
+                            id="email"
+                            v-model="form.email"
+                            type="email"
+                            :value="form.email"
+                        />
                         <InputError :message="form.errors.email" />
                     </div>
                     <div class="space-y-4">
                         <Label for="password">Password</Label>
-                        <Input id="password" v-model="form.password" type="password" autocomplete="off"/>
+                        <Input
+                            id="password"
+                            v-model="form.password"
+                            type="password"
+                            autocomplete="off"
+                        />
                         <InputError :message="form.errors.password" />
                     </div>
-                    <Button type="submit" :disabled="form.processing">Update</Button>
+                    <Button type="submit" :disabled="form.processing"
+                        >Update</Button
+                    >
                 </form>
             </div>
         </div>

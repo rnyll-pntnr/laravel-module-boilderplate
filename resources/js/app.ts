@@ -1,14 +1,14 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
+import DataTablesLib from 'datatables.net-dt';
+import DataTable from 'datatables.net-vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
-import DataTablesLib from 'datatables.net-dt'
-import DataTable from 'datatables.net-vue3'
 
-DataTable.use(DataTablesLib)
+DataTable.use(DataTablesLib);
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -27,7 +27,10 @@ createInertiaApp({
             const matchingPath = Object.keys(pages).find((p) => {
                 if (name.includes('::')) {
                     const [module, component] = name.split('::');
-                    return p.includes(`/${module}/`) && p.endsWith(`/${component}.vue`);
+                    return (
+                        p.includes(`/${module}/`) &&
+                        p.endsWith(`/${component}.vue`)
+                    );
                 }
                 return p.endsWith(`/${name}.vue`);
             });

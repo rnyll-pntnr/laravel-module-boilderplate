@@ -21,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Create User',
         href: '#',
-    }
+    },
 ];
 
 const form = useForm({
@@ -50,10 +50,16 @@ const form = useForm({
                     </div>
                     <div class="space-y-4">
                         <Label for="password">Password</Label>
-                        <Input id="password" v-model="form.password" type="password" />
+                        <Input
+                            id="password"
+                            v-model="form.password"
+                            type="password"
+                        />
                         <InputError :message="form.errors.password" />
                     </div>
-                    <Button type="submit" :disabled="form.processing">Create</Button>
+                    <Button type="submit" :disabled="form.processing"
+                        >Create</Button
+                    >
                 </form>
             </div>
         </div>

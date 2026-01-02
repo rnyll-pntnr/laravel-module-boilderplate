@@ -12,11 +12,17 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { index as users } from '@/routes/users';
 import { index as roles } from '@/routes/roles';
+import { index as users } from '@/routes/users';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, User, UserRoundCogIcon } from 'lucide-vue-next';
+import {
+    BookOpen,
+    Folder,
+    LayoutGrid,
+    User,
+    UserRoundCogIcon,
+} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -34,7 +40,7 @@ const mainNavItems: NavItem[] = [
         title: 'Roles',
         href: roles(),
         icon: UserRoundCogIcon,
-    }
+    },
 ];
 
 const footerNavItems: NavItem[] = [
