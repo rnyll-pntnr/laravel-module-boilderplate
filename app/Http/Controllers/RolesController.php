@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
+use App\Http\Requests\Roles\CreateRoleRequest;
 
 class RolesController extends Controller
 {
@@ -20,31 +22,28 @@ class RolesController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('roles/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateRoleRequest $request)
     {
-        //
+        $role = Role::create(['name' => $request->name]);
+        \Cache::forget('Dashboard_roles');
+        return redirect()->route('roles.index')->with('message', 'Role created successfully!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return Inertia::render('roles/Show', [
+            'role' => $role
+        ]);
     }
 
     /**
@@ -52,7 +51,10 @@ class RolesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->update(['name' => $request->name]);
+        \Cache::forget('Dashboard_roles');
+        return redirect()->route('roles.index')->with('message', 'Role updated successfully!');
     }
 
     /**
@@ -60,6 +62,9 @@ class RolesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+        \Cache::forget('Dashboard_roles');
+        return redirect()->route('roles.index')->with('message', 'Role deleted successfully!');
     }
 }

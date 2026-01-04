@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
-import { index as apiIndex } from '@/routes/api/users/index';
+import { index as apiIndex } from '@/routes/api/roles/index';
 import { create, destroy, edit, index } from '@/routes/roles';
 import { User, type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
