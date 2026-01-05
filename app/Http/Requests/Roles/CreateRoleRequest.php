@@ -11,7 +11,7 @@ class CreateRoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user() !== null;
+        return auth()->check();
     }
 
     /**

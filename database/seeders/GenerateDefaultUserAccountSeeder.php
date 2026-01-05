@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class GenerateDefaultUserAccountSeeder extends Seeder
@@ -14,23 +15,52 @@ class GenerateDefaultUserAccountSeeder extends Seeder
      */
     public function run(): void
     {
+        $rolePermissions = [
+            'View Roles',
+            'Create Roles',
+            'Edit Roles',
+            'Delete Roles',
+        ];
+
+        $userPermissions = [
+            'View Users',
+            'Create Users',
+            'Edit Users',
+            'Delete Users'
+        ];
+
+        $permissions = [
+            ...$rolePermissions,
+            ...$userPermissions
+        ];
+
         /**
-         * Create Super Admin
+         * Save all default permissions
          */
-        $user = User::create([
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+
+        /**
+         * Create Super Admin with all permissions
+         */
+        $superAdmin = Role::create(['name' => 'Super Admin']);
+        $admin = Role::create(['name' => 'Admin']);
+
+        foreach ($permissions as $permission) {
+            $superAdmin->givePermissionTo($permission);
+        }
+
+        User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@admin.com',
+            'password' => bcrypt('Demo@123')
+        ])->assignRole($superAdmin);
+
+        User::create([
             'name' => 'Admin',
             'email' => 'admin@admin.com',
-            'password' => 'Demo@123',
-        ]);
-
-        /**
-         * Create Super Admin Role
-         */
-        $role = Role::create(['name' => 'Super Admin']);
-
-        /**
-         * Assign Super Admin Role to Super Admin User
-         */
-        $user->assignRole($role);
+            'password' => bcrypt('Demo@123')
+        ])->assignRole($admin);
     }
 }

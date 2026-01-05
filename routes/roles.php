@@ -13,4 +13,13 @@ Route::prefix('dashboard')->group(function () {
       Route::delete('/{id}', [RolesController::class, 'destroy'])->name('roles.destroy');
       Route::patch('/{id}', [RolesController::class, 'update'])->name('roles.update');
    });
+
+   Route::prefix('permissions')->group(function () {
+      Route::get('/', [RolesController::class, 'indexPermissions'])->name('permissions.index');
+      Route::post('/', [RolesController::class, 'storePermissions'])->name('permissions.store');
+      Route::get('/create', [RolesController::class, 'createPermissions'])->name('permissions.create');
+      Route::get('/{id}/edit', [RolesController::class, 'editPermissions'])->name('permissions.edit');
+      Route::delete('/{id}', [RolesController::class, 'destroyPermissions'])->name('permissions.destroy');
+      Route::patch('/{id}', [RolesController::class, 'updatePermissions'])->name('permissions.update');
+   });
 })->middleware(['auth', 'verified'])->name('roles');
