@@ -16,14 +16,14 @@ class GenerateDefaultUserAccountSeeder extends Seeder
     public function run(): void
     {
         $rolePermissions = [
-            'View Roles',
+            'Read Roles',
             'Create Roles',
             'Edit Roles',
             'Delete Roles',
         ];
 
         $userPermissions = [
-            'View Users',
+            'Read Users',
             'Create Users',
             'Edit Users',
             'Delete Users'

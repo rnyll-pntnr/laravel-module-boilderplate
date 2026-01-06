@@ -49,13 +49,13 @@ const page = usePage();
 const auth = computed(() => page.props.auth);
 
 const isCurrentRoute = computed(
-    () => (url: NonNullable<InertiaLinkProps['href']>) =>
-        urlIsActive(url, page.url),
+    () => (url: NonNullable<InertiaLinkProps['href']>, exact?: boolean) =>
+        urlIsActive(url, page.url, exact),
 );
 
 const activeItemStyles = computed(
-    () => (url: NonNullable<InertiaLinkProps['href']>) =>
-        isCurrentRoute.value(toUrl(url))
+    () => (url: NonNullable<InertiaLinkProps['href']>, exact?: boolean) =>
+        isCurrentRoute.value(toUrl(url), exact)
             ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
             : '',
 );
@@ -65,6 +65,7 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        exact: true,
     },
 ];
 
@@ -116,7 +117,7 @@ const rightNavItems: NavItem[] = [
                                         :key="item.title"
                                         :href="item.href"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                        :class="activeItemStyles(item.href)"
+                                        :class="activeItemStyles(item.href, item.exact)"
                                     >
                                         <component
                                             v-if="item.icon"
@@ -166,7 +167,7 @@ const rightNavItems: NavItem[] = [
                                 <Link
                                     :class="[
                                         navigationMenuTriggerStyle(),
-                                        activeItemStyles(item.href),
+                                        activeItemStyles(item.href, item.exact),
                                         'h-9 cursor-pointer px-3',
                                     ]"
                                     :href="item.href"
@@ -179,7 +180,7 @@ const rightNavItems: NavItem[] = [
                                     {{ item.title }}
                                 </Link>
                                 <div
-                                    v-if="isCurrentRoute(item.href)"
+                                    v-if="isCurrentRoute(item.href, item.exact)"
                                     class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
                                 ></div>
                             </NavigationMenuItem>

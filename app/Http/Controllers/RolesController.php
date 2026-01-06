@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Http\Requests\Roles\CreateRoleRequest;
 
 class RolesController extends Controller
@@ -40,8 +41,11 @@ class RolesController extends Controller
     public function edit(string $id)
     {
         $role = Role::findOrFail($id);
+        $permissions = $role->permissions;
         return Inertia::render('roles/Show', [
-            'role' => $role
+            'role' => $role,
+            'permissions' => Permission::all()->toArray(),
+            'ticked_permissions' => $permissions->pluck('id')->toArray(),
         ]);
     }
 

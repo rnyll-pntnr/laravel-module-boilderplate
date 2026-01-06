@@ -6,15 +6,15 @@ import Label from '@/components/ui/label/Label.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { index, update } from '@/routes/roles';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, Permission } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
+import RolePermissions from '@/components/RolePermissions.vue';
 
-const props = defineProps({
-    role: {
-        type: Object,
-        required: true,
-    },
-});
+const props = defineProps<{
+    role: any
+    permissions: Permission[]
+    ticked_permissions: number[]
+}>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -53,6 +53,10 @@ const form = useForm({
                     >
                 </form>
             </div>
+        </div>
+
+        <div class="p-4">
+            <RolePermissions :permissions="props.permissions" :ticked_permissions="props.ticked_permissions" />
         </div>
     </AppLayout>
 </template>

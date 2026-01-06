@@ -17,11 +17,10 @@ import { index as users } from '@/routes/users';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import {
-    BookOpen,
-    Folder,
     LayoutGrid,
     User,
     UserRoundCogIcon,
+    SettingsIcon,
 } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
@@ -30,16 +29,24 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        exact: true,
     },
     {
-        title: 'Users',
-        href: users(),
-        icon: User,
-    },
-    {
-        title: 'Roles',
-        href: roles(),
-        icon: UserRoundCogIcon,
+        title: 'Settings',
+        href: '#',
+        icon: SettingsIcon,
+        child: [
+            {
+                title: 'Users',
+                href: users(),
+                icon: User,
+            },
+            {
+                title: 'Roles',
+                href: roles(),
+                icon: UserRoundCogIcon,
+            },
+        ],
     },
 ];
 
