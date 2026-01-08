@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
-import { store } from '@/routes/login';
+import { store, google } from '@/routes/login';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 
@@ -17,6 +17,11 @@ defineProps<{
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
+const googleRedirect = () => {
+    window.location.href = google().url;
+};
+
 </script>
 
 <template>
@@ -95,6 +100,18 @@ defineProps<{
                 >
                     <Spinner v-if="processing" />
                     Log in
+                </Button>
+
+                <Button
+                    type="button"
+                    class="w-full"
+                    :tabindex="4"
+                    :disabled="processing"
+                    data-test="login-button"
+                    @click="googleRedirect()"
+                >
+                    <Spinner v-if="processing" />
+                    Log in with Google
                 </Button>
             </div>
 

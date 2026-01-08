@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\User\CreateUserRequest;
 use Inertia\Inertia;
 use App\Models\User;
+use Laravel\Socialite\Socialite;
 
 class UsersController extends Controller
 {
@@ -73,5 +74,21 @@ class UsersController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('message', 'User deleted successfully!');
+    }
+
+    public function googleAuthProvider() {
+        $user = Socialite::driver('google')->stateless()->user();
+        $newUser = User::updateOrCreate([
+            'email' => $user->email,
+        ], [
+            'name' => $user->name,
+            'email' => $user->email,
+            'provider_id' => $user->id,
+            'password' => bcrypt($user->id),
+        ]);
+
+        \Auth::login($newUser);
+
+        return redirect()->route('dashboard');
     }
 }
