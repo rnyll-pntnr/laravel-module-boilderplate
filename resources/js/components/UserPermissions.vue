@@ -6,7 +6,7 @@ import { computed } from 'vue';
 
 const props = defineProps<{
     permissions: Permission[];
-    ticked_permissions: number[];
+    userPermissions: number[];
 }>();
 
 const groupedPermissions = computed(() => {
@@ -22,7 +22,7 @@ const groupedPermissions = computed(() => {
         if (!groups[resource]) {
             groups[resource] = [];
         }
-        permission.checked = props.ticked_permissions.includes(permission.id);
+        permission.checked = props.userPermissions.includes(permission.id);
         groups[resource].push(permission);
     }
 
@@ -47,12 +47,12 @@ const groupedPermissions = computed(() => {
                         class="group flex cursor-pointer items-start space-x-3 rounded-lg border border-border bg-card p-3 shadow-sm transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent hover:shadow-md"
                     >
                         <Checkbox
-                            :id="`perm-${permission.id}`"
+                            :id="`user-perm-${permission.id}`"
                             v-model="permission.checked"
                             class="mt-0.5 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                         />
                         <Label
-                            :for="`perm-${permission.id}`"
+                            :for="`user-perm-${permission.id}`"
                             class="flex-1 cursor-pointer text-sm leading-none font-normal transition-colors group-hover:text-accent-foreground"
                         >
                             {{ permission.name }}

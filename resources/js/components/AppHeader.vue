@@ -117,7 +117,12 @@ const rightNavItems: NavItem[] = [
                                         :key="item.title"
                                         :href="item.href"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                        :class="activeItemStyles(item.href, item.exact)"
+                                        :class="
+                                            activeItemStyles(
+                                                item.href,
+                                                item.exact,
+                                            )
+                                        "
                                     >
                                         <component
                                             v-if="item.icon"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -12,15 +11,17 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as permissions } from '@/routes/permissions';
 import { index as roles } from '@/routes/roles';
 import { index as users } from '@/routes/users';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import {
     LayoutGrid,
+    SettingsIcon,
+    ShieldCheckIcon,
     User,
     UserRoundCogIcon,
-    SettingsIcon,
 } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
@@ -45,6 +46,11 @@ const mainNavItems: NavItem[] = [
                 title: 'Roles',
                 href: roles(),
                 icon: UserRoundCogIcon,
+            },
+            {
+                title: 'Permissions',
+                href: permissions(),
+                icon: ShieldCheckIcon,
             },
         ],
     },

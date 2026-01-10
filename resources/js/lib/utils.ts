@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 export function urlIsActive(
     urlToCheck: NonNullable<InertiaLinkProps['href']>,
     currentUrl: string,
-    exact: boolean = false
+    exact: boolean = false,
 ) {
     const activeUrl = toUrl(urlToCheck);
 

@@ -1,16 +1,26 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
 import Button from '@/components/ui/button/Button.vue';
+import { Checkbox } from '@/components/ui/checkbox';
 import Input from '@/components/ui/input/Input.vue';
 import Label from '@/components/ui/label/Label.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { index, update } from '@/routes/users';
-import { type BreadcrumbItem, type User } from '@/types';
+import {
+    type BreadcrumbItem,
+    type Permission,
+    type Role,
+    type User,
+} from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps<{
     user: User;
+    roles: Role[];
+    permissions: Permission[];
+    user_roles: number[];
+    user_permissions: number[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -32,14 +42,34 @@ const form = useForm({
     name: props.user.name,
     email: props.user.email,
     password: '',
+    roles: [...props.user_roles],
+    permissions: [...props.user_permissions],
 });
 
 const handleSubmit = (user: User) => {
     form.patch(update(user.id).url, {
         onSuccess: () => {
-            form.reset();
+            form.reset('password');
         },
     });
+};
+
+const toggleRole = (roleId: number) => {
+    const index = form.roles.indexOf(roleId);
+    if (index > -1) {
+        form.roles.splice(index, 1);
+    } else {
+        form.roles.push(roleId);
+    }
+};
+
+const togglePermission = (permissionId: number) => {
+    const index = form.permissions.indexOf(permissionId);
+    if (index > -1) {
+        form.permissions.splice(index, 1);
+    } else {
+        form.permissions.push(permissionId);
+    }
 };
 </script>
 
@@ -48,41 +78,125 @@ const handleSubmit = (user: User) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4">
-            <div class="w-8/12">
+            <div class="w-full max-w-4xl">
                 <form @submit.prevent="handleSubmit(user)">
-                    <div class="space-y-4">
-                        <Label for="name">Name</Label>
-                        <Input
-                            id="name"
-                            v-model="form.name"
-                            type="text"
-                            :value="form.name"
-                        />
-                        <InputError :message="form.errors.name" />
+                    <div class="space-y-6">
+                        <!-- Basic Information -->
+                        <div class="space-y-4 rounded-lg border bg-card p-6">
+                            <h2 class="mb-4 text-xl font-semibold">
+                                Basic Information
+                            </h2>
+
+                            <div class="space-y-2">
+                                <Label for="name">Name</Label>
+                                <Input
+                                    id="name"
+                                    v-model="form.name"
+                                    type="text"
+                                    :value="form.name"
+                                />
+                                <InputError :message="form.errors.name" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label for="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    v-model="form.email"
+                                    type="email"
+                                    :value="form.email"
+                                />
+                                <InputError :message="form.errors.email" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <Label for="password">Password</Label>
+                                <Input
+                                    id="password"
+                                    v-model="form.password"
+                                    type="password"
+                                    autocomplete="off"
+                                    placeholder="Leave blank to keep current password"
+                                />
+                                <InputError :message="form.errors.password" />
+                            </div>
+                        </div>
+
+                        <!-- Role Selection -->
+                        <div class="space-y-4 rounded-lg border bg-card p-6">
+                            <h2 class="mb-4 text-xl font-semibold">
+                                Assign Roles
+                            </h2>
+                            <div
+                                class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3"
+                            >
+                                <div
+                                    v-for="role in roles"
+                                    :key="role.id"
+                                    class="group flex cursor-pointer items-center space-x-3 rounded-lg border border-border bg-background p-3 shadow-sm transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent hover:shadow-md"
+                                    @click="toggleRole(role.id)"
+                                >
+                                    <Checkbox
+                                        :id="`role-${role.id}`"
+                                        :checked="form.roles.includes(role.id)"
+                                        class="pointer-events-none"
+                                    />
+                                    <Label
+                                        :for="`role-${role.id}`"
+                                        class="flex-1 cursor-pointer text-sm font-medium transition-colors group-hover:text-accent-foreground"
+                                    >
+                                        {{ role.name }}
+                                    </Label>
+                                </div>
+                            </div>
+                            <InputError :message="form.errors.roles" />
+                        </div>
+
+                        <!-- Permission Customization -->
+                        <div class="space-y-4 rounded-lg border bg-card p-6">
+                            <div class="space-y-2">
+                                <h2 class="text-xl font-semibold">
+                                    Custom Permissions
+                                </h2>
+                                <p class="text-sm text-muted-foreground">
+                                    Customize permissions for this user
+                                    independently of their role's default
+                                    permissions.
+                                </p>
+                            </div>
+                            <div
+                                class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                            >
+                                <div
+                                    v-for="permission in permissions"
+                                    :key="permission.id"
+                                    class="group flex cursor-pointer items-center space-x-3 rounded-lg border border-border bg-background p-3 shadow-sm transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent hover:shadow-md"
+                                    @click="togglePermission(permission.id)"
+                                >
+                                    <Checkbox
+                                        :id="`perm-${permission.id}`"
+                                        :checked="
+                                            form.permissions.includes(
+                                                permission.id,
+                                            )
+                                        "
+                                        class="pointer-events-none"
+                                    />
+                                    <Label
+                                        :for="`perm-${permission.id}`"
+                                        class="flex-1 cursor-pointer text-sm font-normal transition-colors group-hover:text-accent-foreground"
+                                    >
+                                        {{ permission.name }}
+                                    </Label>
+                                </div>
+                            </div>
+                            <InputError :message="form.errors.permissions" />
+                        </div>
+
+                        <Button type="submit" :disabled="form.processing">
+                            Update User
+                        </Button>
                     </div>
-                    <div class="space-y-4">
-                        <Label for="email">Email</Label>
-                        <Input
-                            id="email"
-                            v-model="form.email"
-                            type="email"
-                            :value="form.email"
-                        />
-                        <InputError :message="form.errors.email" />
-                    </div>
-                    <div class="space-y-4">
-                        <Label for="password">Password</Label>
-                        <Input
-                            id="password"
-                            v-model="form.password"
-                            type="password"
-                            autocomplete="off"
-                        />
-                        <InputError :message="form.errors.password" />
-                    </div>
-                    <Button type="submit" :disabled="form.processing"
-                        >Update</Button
-                    >
                 </form>
             </div>
         </div>

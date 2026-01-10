@@ -16,7 +16,10 @@ class UsersController extends Controller
     }
 
     public function create() {
-        return Inertia::render('users/Create');
+        return Inertia::render('users/Create', [
+            'roles' => \Spatie\Permission\Models\Role::all(),
+            'permissions' => \Spatie\Permission\Models\Permission::all(),
+        ]);
     }
 
     /**
@@ -47,7 +50,19 @@ class UsersController extends Controller
      * )
      */
     public function store(CreateUserRequest $request) {
-        $user = User::create($request->validated());
+        // Extract only the user fillable fields
+        $userData = $request->only(['name', 'email', 'password']);
+        $user = User::create($userData);
+        
+        // Assign roles if provided
+        if ($request->has('roles') && !empty($request->roles)) {
+            $user->syncRoles($request->roles);
+        }
+        
+        // Assign permissions if provided
+        if ($request->has('permissions') && !empty($request->permissions)) {
+            $user->syncPermissions($request->permissions);
+        }
         
         return redirect()->route('users.index')->with('message', 'User created successfully!');
     }
@@ -55,16 +70,31 @@ class UsersController extends Controller
     public function edit($id) {
         $user = User::findOrFail($id);
         return Inertia::render('users/Show', [
-            'user' => $user
+            'user' => $user,
+            'roles' => \Spatie\Permission\Models\Role::all(),
+            'permissions' => \Spatie\Permission\Models\Permission::all(),
+            'user_roles' => $user->roles->pluck('id')->toArray(),
+            'user_permissions' => $user->permissions->pluck('id')->toArray(),
         ]);
     }
 
     public function update($id) {
         $user = User::findOrFail($id);
+        
         $user->update([
             'name' => request('name'),
             'email' => request('email'),
         ]);
+
+        // Sync roles if provided
+        if (request()->has('roles')) {
+            $user->syncRoles(request('roles'));
+        }
+        
+        // Sync permissions if provided
+        if (request()->has('permissions')) {
+            $user->syncPermissions(request('permissions'));
+        }
 
         return redirect()->route('users.index')->with('message', 'User updated successfully!');
     }

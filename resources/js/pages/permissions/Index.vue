@@ -8,8 +8,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
-import { index as apiIndex } from '@/routes/api/roles/index';
-import { create, destroy, edit, index } from '@/routes/roles';
+import { index as apiIndex } from '@/routes/api/permissions/index';
+import { create, destroy, edit, index } from '@/routes/permissions';
 import { User, type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import dayjs from 'dayjs';
@@ -47,13 +47,13 @@ const columns = [
 </script>
 
 <template>
-    <Head title="Roles" />
+    <Head title="Permissions" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4">
             <div class="space-y-4">
                 <Link :href="create().url">
-                    <Button variant="default">Create Role</Button>
+                    <Button variant="default">Create Permission</Button>
                 </Link>
             </div>
             <DataTable

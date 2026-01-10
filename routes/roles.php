@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\PermissionsController;
 
 Route::prefix('dashboard')->group(function () {
    Route::prefix('roles')->group(function () {
@@ -15,11 +16,11 @@ Route::prefix('dashboard')->group(function () {
    });
 
    Route::prefix('permissions')->group(function () {
-      Route::get('/', [RolesController::class, 'indexPermissions'])->name('permissions.index');
-      Route::post('/', [RolesController::class, 'storePermissions'])->name('permissions.store');
-      Route::get('/create', [RolesController::class, 'createPermissions'])->name('permissions.create');
-      Route::get('/{id}/edit', [RolesController::class, 'editPermissions'])->name('permissions.edit');
-      Route::delete('/{id}', [RolesController::class, 'destroyPermissions'])->name('permissions.destroy');
-      Route::patch('/{id}', [RolesController::class, 'updatePermissions'])->name('permissions.update');
+      Route::get('/', [PermissionsController::class, 'index'])->name('permissions.index');
+      Route::post('/', [PermissionsController::class, 'store'])->name('permissions.store');
+      Route::get('/create', [PermissionsController::class, 'create'])->name('permissions.create');
+      Route::get('/{id}/edit', [PermissionsController::class, 'edit'])->name('permissions.edit');
+      Route::delete('/{id}', [PermissionsController::class, 'destroy'])->name('permissions.destroy');
+      Route::patch('/{id}', [PermissionsController::class, 'update'])->name('permissions.update');
    });
 })->middleware(['auth', 'verified'])->name('roles');

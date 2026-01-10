@@ -55,7 +55,17 @@ class RolesController extends Controller
     public function update(Request $request, string $id)
     {
         $role = Role::findOrFail($id);
-        $role->update(['name' => $request->name]);
+        
+        // Only update name if provided
+        if ($request->has('name')) {
+            $role->update(['name' => $request->name]);
+        }
+        
+        // Sync permissions if provided
+        if ($request->has('permissions')) {
+            $role->syncPermissions($request->permissions);
+        }
+        
         return redirect()->route('roles.index')->with('message', 'Role updated successfully!');
     }
 
@@ -69,33 +79,5 @@ class RolesController extends Controller
         return redirect()->route('roles.index')->with('message', 'Role deleted successfully!');
     }
 
-    public function indexPermissions()
-    {
-        return Inertia::render('permissions/Index');
-    }
 
-    public function createPermissions()
-    {
-        return Inertia::render('permissions/Create');
-    }
-
-    public function storePermissions()
-    {
-        
-    }
-
-    public function editPermissions()
-    {
-        return Inertia::render('permissions/Edit');
-    }
-
-    public function updatePermissions()
-    {
-        return Inertia::render('permissions/Update');
-    }
-
-    public function destroyPermissions()
-    {
-        return Inertia::render('permissions/Destroy');
-    }
 }

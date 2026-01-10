@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -30,7 +34,11 @@ const page = usePage();
                 <Collapsible
                     v-if="item.child && item.child.length > 0"
                     as-child
-                    :default-open="item.child.some((subItem) => urlIsActive(subItem.href, page.url, subItem.exact))"
+                    :default-open="
+                        item.child.some((subItem) =>
+                            urlIsActive(subItem.href, page.url, subItem.exact),
+                        )
+                    "
                     class="group/collapsible"
                 >
                     <SidebarMenuItem>
@@ -45,10 +53,25 @@ const page = usePage();
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                             <SidebarMenuSub>
-                                <SidebarMenuSubItem v-for="subItem in item.child" :key="subItem.title">
-                                    <SidebarMenuSubButton as-child :is-active="urlIsActive(subItem.href, page.url, subItem.exact)">
+                                <SidebarMenuSubItem
+                                    v-for="subItem in item.child"
+                                    :key="subItem.title"
+                                >
+                                    <SidebarMenuSubButton
+                                        as-child
+                                        :is-active="
+                                            urlIsActive(
+                                                subItem.href,
+                                                page.url,
+                                                subItem.exact,
+                                            )
+                                        "
+                                    >
                                         <Link :href="subItem.href">
-                                            <component :is="subItem.icon" v-if="subItem.icon" />
+                                            <component
+                                                :is="subItem.icon"
+                                                v-if="subItem.icon"
+                                            />
                                             <span>{{ subItem.title }}</span>
                                         </Link>
                                     </SidebarMenuSubButton>
@@ -59,7 +82,13 @@ const page = usePage();
                 </Collapsible>
 
                 <SidebarMenuItem v-else>
-                    <SidebarMenuButton as-child :is-active="urlIsActive(item.href, page.url, item.exact)" :tooltip="item.title">
+                    <SidebarMenuButton
+                        as-child
+                        :is-active="
+                            urlIsActive(item.href, page.url, item.exact)
+                        "
+                        :tooltip="item.title"
+                    >
                         <Link :href="item.href">
                             <component :is="item.icon" v-if="item.icon" />
                             <span>{{ item.title }}</span>

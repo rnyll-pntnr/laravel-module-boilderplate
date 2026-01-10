@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\{
     UserController,
-    RolesController
+    RolesController,
+    PermissionsController
 };
 
 // Public routes
@@ -25,4 +26,8 @@ Route::prefix('users')->group(function () {
 
 Route::prefix('roles')->group(function () {
     Route::get('/', [RolesController::class, 'index'])->name('api.roles.index');
+})->middleware('auth:sanctum');
+
+Route::prefix('permissions')->group(function () {
+    Route::get('/', [PermissionsController::class, 'index'])->name('api.permissions.index');
 })->middleware('auth:sanctum');
