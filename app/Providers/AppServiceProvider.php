@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Event;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +31,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             // Return true if the user has the 'Super Admin' role, granting all permissions
             return $user->hasRole('Super Admin') ? true : null;
+        });
+
+        Scramble::configure()
+        ->withDocumentTransformers(function (OpenApi $openApi) {
+            $openApi->secure(
+                SecurityScheme::http('bearer')
+            );
         });
     }
 }

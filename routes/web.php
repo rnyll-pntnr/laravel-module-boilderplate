@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Socialite\Socialite;
 use App\Http\Controllers\UsersController;
+use Dedoc\Scramble\Scramble;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -29,3 +30,6 @@ Route::get('dashboard', function () {
 require __DIR__.'/settings.php';
 require __DIR__.'/users.php';
 require __DIR__.'/roles.php';
+
+Scramble::registerJsonSpecificationRoute('/docs/api');
+Scramble::registerUiRoute('/docs');

@@ -5,12 +5,21 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
+use Dedoc\Scramble\Attributes\{
+    QueryParameter,
+    Group
+};
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get Users
+     * 
+     * Get all users in paginated list
      */
+    #[QueryParameter('search', description: 'Search by name of email.', type: 'string', default: 'name', example: 'Customer Name')]
+    #[QueryParameter('page', description: 'Current page.', type: 'int', default: 1, example: '1')]
     public function index()
     {
         $data = User::where(function($q) {
@@ -46,37 +55,47 @@ class UserController extends Controller
     }
 
     /**
-     * @OA\PathItem(path="/api/authenticate")
+     * Create New User
      */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+        ]);
+
+        return response()->json($user, 201);
+    }
 
     /**
-     * @OA\Post(
-     *      path="/api/authenticate",
-     *      summary="Authenticate a user",
-     *      tags={"Authentication"},
-     *      security={},
-     *      description="Authenticate a user and return a token.",
-     *      @OA\RequestBody(
-     *          required=true,
-     *          @OA\JsonContent(
-     *              required={"email", "password"},
-     *              @OA\Property(property="email", type="string", format="email", example="user@example.com"),
-     *              @OA\Property(property="password", type="string", format="password", example="password123")
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="A token for the authenticated user",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="token", type="string", example="1234567890abcdef1234567890abcdef")
-     *          )
-     *      )
-     *
-     * )
+     * Authenticate User
+     * 
+     * This is description
+     * @unauthenticated
+     * @requestMediaType application/json
+     * 
+     * @param email
+     * 
      */
+    #[Group('Authentication', weight: 0)]
     public function authenticate(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only(
+            'email',
+            'password'
+        );
+
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string',
+        ]);
 
         if (!auth()->attempt($credentials)) {
             return response()->json([
@@ -88,11 +107,6 @@ class UserController extends Controller
          * @var User $user
          */
         $user = auth()->user();
-
-        /**
-         * @var \Illuminate\Auth\SessionGuard $auth
-         */
-        $auth = auth();
 
         $token = $user->createToken($request->token_name ?? 'PLAIN_TOKEN');
 
